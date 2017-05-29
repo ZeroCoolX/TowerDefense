@@ -25,9 +25,10 @@ public class WaveSpawner : MonoBehaviour {
         }
 
         countdown -= Time.deltaTime;    //amount of time passed since the last time we drew a frame
-
+        //Clamp
+        countdown = Mathf.Clamp(countdown, 0f, Mathf.Infinity);
         //update ui
-        waveCountdownText.text = Mathf.Round(countdown).ToString();//strip decimals
+        waveCountdownText.text = string.Format("{0:00.00}", countdown);
     }
 
     private IEnumerator spawnWave() {

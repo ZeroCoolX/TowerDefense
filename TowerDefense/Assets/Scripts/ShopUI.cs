@@ -6,23 +6,26 @@ public class ShopUI : MonoBehaviour {
 
     BuildManager buildManager;
 
+    public TurretBlueprint baseTurret;
+    public TurretBlueprint missileTurret;
+
     private void Start() {
         buildManager = BuildManager.instance;
     }
 
 
-    public void purchaseBaseTurret() {
+    public void selectBaseTurret() {
         Debug.Log("base turet selected");
-        buildManager.turretToBuild = buildManager.baseTurretPrefab;
+        buildManager.turretToBuild = baseTurret;
     }
 
-    public void purchaseMissileTurret() {
+    public void selectMissileTurret() {
         Debug.Log("missile turet selected");
-        buildManager.turretToBuild = buildManager.missileTurretPrefab;
+        buildManager.turretToBuild = missileTurret;
     }
 
-    public void purchaseLazerTurret() {
+    public void selectLazerTurret() {
         Debug.Log("lazer turet selected");
-        buildManager.turretToBuild = buildManager.lazerTurretPrefab;
+        //buildManager.turretToBuild = buildManager.lazerTurretPrefab;
     }
 }

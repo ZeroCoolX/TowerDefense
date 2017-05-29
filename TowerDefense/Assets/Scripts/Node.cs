@@ -11,18 +11,26 @@ public class Node : MonoBehaviour {
 
     private Color baseColor;
     public Color hoverColor;
+    public Color notEnoughMoneyColor;
     //so it sits perfectly on the node
     public Vector3 posOffset;
 
     private Renderer rend;
 
-    private GameObject turret;
+    //turret on this node
+    [Header("Optional")]
+    public GameObject turret;
+
 
     private void Start() {
         buildManager = BuildManager.instance;
 
         rend = GetComponent<Renderer>();
         baseColor = rend.material.color;
+    }
+
+    public Vector3 getBuildPosition() { 
+        return (transform.position + posOffset);
     }
 
     //user clicks on the node
@@ -32,7 +40,7 @@ public class Node : MonoBehaviour {
             return;
         }
 
-        if (buildManager.turretToBuild == null) {
+        if (!buildManager.canBuild) {
             return;
         }
 
@@ -40,10 +48,7 @@ public class Node : MonoBehaviour {
             Debug.Log("Can't build here");//TODO: show ui for this
             return;
         }
-
-        //Build a turret
-        GameObject buildTurret = buildManager.turretToBuild;
-        turret = Instantiate(buildTurret, transform.position + posOffset, transform.rotation) as GameObject;
+        buildManager.buildTurretOn(this);
     }
 
     //let the user know they can interact with this node
@@ -54,11 +59,14 @@ public class Node : MonoBehaviour {
         }
 
         //only show user if there IS a turret to build
-        if (buildManager.turretToBuild == null) {
+        if (!buildManager.canBuild) {
             return;
         }
-
-        rend.material.color = hoverColor;
+        if (!buildManager.canAfford) {
+            rend.material.color = notEnoughMoneyColor;
+        } else {
+            rend.material.color = hoverColor;
+        }
     }
 
     //obv

@@ -41,6 +41,9 @@ public class Bullet : MonoBehaviour {
     private void hitTarget() {
         //spawn and destroy particles
         GameObject effectInst = Instantiate(bulletParticles, transform.position, transform.rotation) as GameObject;
+        Debug.Log("creating particles");
+        effectInst.GetComponent<Renderer>().material.color = target.gameObject.GetComponent<Renderer>().material.color;
+        Debug.Log("color is: " + effectInst.GetComponent<Renderer>().material.color);
         Destroy(effectInst, 5f);
 
         if(explosionRadius > 0f) {
