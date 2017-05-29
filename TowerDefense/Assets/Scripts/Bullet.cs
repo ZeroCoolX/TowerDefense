@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour {
     private Transform target;
     //bullet speed
     public float speed = 70f;
-
+    public float explosionRadius = 0f;
     public GameObject bulletParticles;
 
     //setup everythign for the bullet to chase the target
@@ -34,17 +34,42 @@ public class Bullet : MonoBehaviour {
 
         //move as a constant speed
         transform.Translate(dir.normalized * distanceThisFrame, Space.World);
+        //rotate to face the target
+        transform.LookAt(target);
 	}
 
     private void hitTarget() {
-        //destroy the bullet and spawn the particles
-        Destroy(gameObject);
-
         //spawn and destroy particles
         GameObject effectInst = Instantiate(bulletParticles, transform.position, transform.rotation) as GameObject;
-        Destroy(effectInst, 2f);
+        Destroy(effectInst, 5f);
 
-        //Destroy baddie
-        Destroy(target.gameObject);
+        if(explosionRadius > 0f) {
+            explode();
+        }else {
+            damage(target);
+        }
+
+        //destroy the bullet and spawn the particles
+        Destroy(gameObject);
+    }
+
+    void explode() {
+        //collect a sphere of collisions
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+        foreach (Collider baddie in colliders) {
+            if(baddie.tag == "Baddie") {
+                damage(baddie.transform);
+            }
+        }
+    }
+
+    void damage(Transform baddie) {
+        Destroy(baddie.gameObject);
+    }
+
+    //draw turret range to see in editor
+    private void OnDrawGizmosSelected() {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
 }
