@@ -11,6 +11,8 @@ public class Bullet : MonoBehaviour {
     public float explosionRadius = 0f;
     public GameObject bulletParticles;
 
+    public int bulletDamage = 50;
+
     //setup everythign for the bullet to chase the target
     public void seek(Transform _target) {
         target = _target;
@@ -41,9 +43,9 @@ public class Bullet : MonoBehaviour {
     private void hitTarget() {
         //spawn and destroy particles
         GameObject effectInst = Instantiate(bulletParticles, transform.position, transform.rotation) as GameObject;
-        Debug.Log("creating particles");
-        effectInst.GetComponent<Renderer>().material.color = target.gameObject.GetComponent<Renderer>().material.color;
-        Debug.Log("color is: " + effectInst.GetComponent<Renderer>().material.color);
+       // Debug.Log("creating particles");
+     //   effectInst.GetComponent<Renderer>().material.color = target.gameObject.GetComponent<Renderer>().material.color;
+      //  Debug.Log("color is: " + effectInst.GetComponent<Renderer>().material.color);
         Destroy(effectInst, 5f);
 
         if(explosionRadius > 0f) {
@@ -66,8 +68,13 @@ public class Bullet : MonoBehaviour {
         }
     }
 
-    void damage(Transform baddie) {
-        Destroy(baddie.gameObject);
+    void damage(Transform baddie) {//entire transform
+        Baddie baddieScript = baddie.GetComponent<Baddie>();
+
+        if (baddieScript != null) {
+            //hurt the enemy
+            baddieScript.takeDamage(bulletDamage);
+        }
     }
 
     //draw turret range to see in editor
