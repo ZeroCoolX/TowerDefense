@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Turret : MonoBehaviour {
-
     private Transform target;
-    public float range = 15f;
-    public string baddieTag = "Baddie";
 
+    [Header("Attributes")]
+    public float fireRate = 1f; //1 bullet each second - speed up probably
+    private float fireCountdown = 0f;
+    public float range = 15f;
+
+    [Header("Unity REquired Fields")]
+    public string baddieTag = "Baddie";
     public Transform rotationAxis;
     public float turnSpeed = 10f;
+
+    public GameObject bulletPrefab;
+    public Transform firePoint;
 
 	// Use this for initialization
 	void Start () {
@@ -54,7 +61,25 @@ public class Turret : MonoBehaviour {
         Quaternion lookRotation = Quaternion.LookRotation(dir);//how do we need to rotate ourselves to look in the directino "dir"
         Vector3 rotation = Quaternion.Lerp(rotationAxis.rotation, lookRotation, Time.deltaTime * turnSpeed).eulerAngles;//convert into X, Y, Z rotation
         rotationAxis.rotation = Quaternion.Euler(0f, rotation.y, 0f);//set the actual rotation
+
+        //fire bullets
+        if(fireCountdown <= 0) {
+            shoot();
+            fireCountdown = 1 / fireRate; //fireRate = per second. so 2 means 2 times a second...etc
+        }
+
+        fireCountdown -= Time.deltaTime;
 	}
+
+    private void shoot() {
+        //spawn bulletS
+        GameObject clone = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation) as GameObject;
+        Bullet bullet = clone.GetComponent<Bullet>();//get the bullet script off the instantiated object
+        if(bullet != null) {
+            //set the bullets target to the turrets target
+            bullet.seek(target);
+        }
+    }
 
     //draw turret range to see in editor
     private void OnDrawGizmosSelected() {
