@@ -9,10 +9,6 @@ public class BuildManager : MonoBehaviour {
     private TurretBlueprint _turretToBuild;
     public TurretBlueprint turretToBuild { set { _turretToBuild = value; } }
 
-    public GameObject baseTurretPrefab;
-    public GameObject missileTurretPrefab;
-    public GameObject lazerTurretPrefab;
-
     public GameObject buildEffect;
 
 

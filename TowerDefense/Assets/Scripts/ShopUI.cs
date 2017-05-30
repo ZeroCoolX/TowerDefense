@@ -8,6 +8,7 @@ public class ShopUI : MonoBehaviour {
 
     public TurretBlueprint baseTurret;
     public TurretBlueprint missileTurret;
+    public TurretBlueprint lazerTurret;
 
     private void Start() {
         buildManager = BuildManager.instance;
@@ -26,6 +27,6 @@ public class ShopUI : MonoBehaviour {
 
     public void selectLazerTurret() {
         Debug.Log("lazer turet selected");
-        //buildManager.turretToBuild = buildManager.lazerTurretPrefab;
+        buildManager.turretToBuild = lazerTurret;
     }
 }
