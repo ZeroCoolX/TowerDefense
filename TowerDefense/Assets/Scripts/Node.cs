@@ -18,8 +18,12 @@ public class Node : MonoBehaviour {
     private Renderer rend;
 
     //turret on this node
-    [Header("Optional")]
+    [HideInInspector]
     public GameObject turret;
+    [HideInInspector]
+    public TurretBlueprint turretBlueprint;
+    [HideInInspector]
+    public bool isUpgraded = false;
 
 
     private void Start() {
@@ -40,15 +44,73 @@ public class Node : MonoBehaviour {
             return;
         }
 
-        if (!buildManager.canBuild) {
+        if(turret != null) {
+            buildManager.setNode(this);
             return;
         }
 
-        if(turret != null) {
-            Debug.Log("Can't build here");//TODO: show ui for this
+        if (!buildManager.canBuild) {//cannot build there there is already a turret on the node
             return;
         }
-        buildManager.buildTurretOn(this);
+        //got past everything, build turret retrieved from Buildmanager
+        buildTurret(buildManager.turretToBuild);
+    }
+
+    public void buildTurret(TurretBlueprint blueprint) {
+        if (PlayerStats.currency < blueprint.cost) {
+            return;
+        }
+
+        //charge the player
+        PlayerStats.currency -= blueprint.cost;
+
+        //Build a turret
+        GameObject clone = Instantiate(blueprint.prefab, getBuildPosition(), Quaternion.identity) as GameObject;
+        turret = clone;
+        turretBlueprint = blueprint;
+
+        //Create build effect
+        GameObject effect = Instantiate(buildManager.buildEffect, getBuildPosition(), Quaternion.identity) as GameObject;
+        Destroy(effect, 5f);
+    }
+
+    public void upgradeTurret() {
+        if (PlayerStats.currency < turretBlueprint.upgradeCost) {
+            Debug.Log("not enough money to upgrade");
+            return;
+        }
+
+        //charge the player
+        PlayerStats.currency -= turretBlueprint.upgradeCost;
+
+        //remove the current one so we can spawn a BETTER ONE
+        Destroy(turret);
+
+        //Build a new turret
+        GameObject clone = Instantiate(turretBlueprint.upgradedPrefab, getBuildPosition(), Quaternion.identity) as GameObject;
+        turret = clone;
+
+        //Create build effect
+        GameObject effect = Instantiate(buildManager.buildEffect, getBuildPosition(), Quaternion.identity) as GameObject;
+        Destroy(effect, 5f);
+
+        isUpgraded = true;
+
+        Debug.Log("turret upgraded");
+    }
+
+    public void sellTurret() {
+        PlayerStats.currency += turretBlueprint.getSellPrice();//just like the irl xD
+        //destroy the turret
+        Destroy(turret);
+        turretBlueprint = null;
+
+        //reset nodes upgraded property
+        isUpgraded = false;
+
+        //Create sell effect
+        GameObject effect = Instantiate(buildManager.sellEffect, getBuildPosition(), Quaternion.identity) as GameObject;
+        Destroy(effect, 5f);
     }
 
     //let the user know they can interact with this node

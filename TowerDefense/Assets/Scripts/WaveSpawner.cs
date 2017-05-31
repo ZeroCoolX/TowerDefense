@@ -35,7 +35,8 @@ public class WaveSpawner : MonoBehaviour {
         //increment wave index and store rounds
         ++waveIndex;
         ++PlayerStats.roundsSurvived;
-        for (int i = 0; i < waveIndex; ++i) {
+        //spawn twice as many baddies as round number
+        for (int i = 0; i < waveIndex * 2; ++i) {
             yield return new WaitForSeconds(0.5f);//Baddie spacing
             spawnBaddie();
         }

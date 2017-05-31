@@ -7,10 +7,13 @@ public class BuildManager : MonoBehaviour {
     public static BuildManager instance;
 
     private TurretBlueprint _turretToBuild;
-    public TurretBlueprint turretToBuild { set { _turretToBuild = value; } }
+    public TurretBlueprint turretToBuild { set { _turretToBuild = value; _selectedNode = null; nodeUI.hide(); } get { return _turretToBuild; } }
+
+    private Node _selectedNode;//selecting turret to sell or upgrade
 
     public GameObject buildEffect;
-
+    public GameObject sellEffect;
+    public NodeUI nodeUI;
 
     private void Awake() {
         if (instance != null) {
@@ -20,27 +23,22 @@ public class BuildManager : MonoBehaviour {
     }
 
     public bool canBuild { get { return _turretToBuild != null; } }
-    public bool canAfford { get {
-            Debug.Log("currency = " + PlayerStats.currency + " and build turred cost = " + _turretToBuild.cost);
-            return PlayerStats.currency >= _turretToBuild.cost;
-        } }
+    public bool canAfford { get { return PlayerStats.currency >= _turretToBuild.cost; } }
 
-    public void buildTurretOn(Node node) {
-
-        if(PlayerStats.currency < _turretToBuild.cost) {
-            Debug.Log("Not enough currency to build");
+    public void setNode(Node node) {
+        if(_selectedNode == node) {
+            deselectNode();
             return;
         }
-
-        //charge the player
-        PlayerStats.currency -= _turretToBuild.cost;
-
-        //Build a turret
-        GameObject clone = Instantiate(_turretToBuild.prefab, node.getBuildPosition(), Quaternion.identity) as GameObject;
-        node.turret = clone;
-        //Create build effect
-        GameObject effect = Instantiate(buildEffect, node.getBuildPosition(), Quaternion.identity) as GameObject;
-        Destroy(effect, 5f);
+        _selectedNode = node;
+        _turretToBuild = null;
+        nodeUI.setTarget(node);
     }
+
+    public void deselectNode() {
+        _selectedNode = null;
+        nodeUI.hide();
+    }
+
 
 }
