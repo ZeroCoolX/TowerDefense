@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour {
     private Transform target;
+    private Baddie targetBaddie;
 
     [Header("General")]
     public float range = 15f;
@@ -16,9 +17,11 @@ public class Turret : MonoBehaviour {
 
     [Header("Use Lazer")]
     public bool useLazer = false;
+    public int damageOverTime = 30;
     public LineRenderer lazerLineRenderer;
     public ParticleSystem impactEffect;
     public Light impactLight;
+    public float slowPercentage = 0.3f;//[0,1] 0 means aabsolute srop, 1 means no slowing
 
     [Header("Unity Required Fields")]
     public string baddieTag = "Baddie";
@@ -52,6 +55,7 @@ public class Turret : MonoBehaviour {
         //found baddie in range
         if(nearestBaddie != null && shortestDistance <= range) {
             target = nearestBaddie.transform;
+            targetBaddie = nearestBaddie.GetComponent<Baddie>();
         }else {
             target = null;
         }
@@ -96,6 +100,11 @@ public class Turret : MonoBehaviour {
     }
 
     void lazer() {
+        //damage baddie
+        targetBaddie.takeDamage(damageOverTime * Time.deltaTime);
+        //slow baddie
+        targetBaddie.slow(slowPercentage);
+
         if (!lazerLineRenderer.enabled) {
             lazerLineRenderer.enabled = true;
             impactEffect.Play();//play partciles
