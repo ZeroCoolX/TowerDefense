@@ -16,6 +16,11 @@ public class CameraController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        if (GameManager.gameIsOver) {
+            this.enabled = false;
+            return;
+        }
+
         //Allowing the user to not ALWAYS move. cuz that could get annoying
         if (Input.GetKeyDown(KeyCode.Escape)) {
             doMovement = !doMovement;

@@ -32,7 +32,9 @@ public class WaveSpawner : MonoBehaviour {
     }
 
     private IEnumerator spawnWave() {
+        //increment wave index and store rounds
         ++waveIndex;
+        ++PlayerStats.roundsSurvived;
         for (int i = 0; i < waveIndex; ++i) {
             yield return new WaitForSeconds(0.5f);//Baddie spacing
             spawnBaddie();

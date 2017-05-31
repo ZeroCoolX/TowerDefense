@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-    private bool gameHasEnded = false;
-	
-	// Update is called once per frame
-	void Update () {
-        if (gameHasEnded) {
+
+    public static bool gameIsOver = false;
+
+    public GameObject gameOverUI;
+
+    private void Start() {
+        gameIsOver = false;
+    }
+
+    // Update is called once per frame
+    void Update () {
+        if (gameIsOver) {
             return;
         }
 		if(PlayerStats.lives <= 0) {
@@ -16,7 +23,7 @@ public class GameManager : MonoBehaviour {
 	}
 
     private void endGame() {
-        gameHasEnded = true;
-        Debug.Log("Game has ended");
+        gameIsOver = true;
+        gameOverUI.SetActive(true);
     }
 }
