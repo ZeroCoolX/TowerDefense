@@ -23,8 +23,6 @@ public class WaveSpawner : MonoBehaviour {
     private void Update() {
         //check wave beaten
         if (baddiesAlive > 0) {
-            Debug.Log("baddies alive");
-            //waveCountdownText.text = string.Format("{0:00.00}", 0f);//hard set to zero because of update being too fast
             return;
         }
 
