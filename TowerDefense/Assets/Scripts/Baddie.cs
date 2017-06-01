@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Baddie : MonoBehaviour {
     [Header("Attributes")]
@@ -8,12 +9,16 @@ public class Baddie : MonoBehaviour {
     [HideInInspector]
     public float speed;//baddie speed
     public int baddieHubris = 50;
-    public float health = 100f;
+    public float health;
+    private float startHealth = 100f;
     public GameObject deathEffect;
 
+    [Header("Unity Stuff")]
+    public Image healthBar;
 
     private void Start() {
         speed = startSpeed;
+        health = startHealth;
     }
 
     public void slow(float slowPercent) {
@@ -22,6 +27,7 @@ public class Baddie : MonoBehaviour {
 
     public void takeDamage(float damage) {
         health -= damage;
+        healthBar.fillAmount = health / startHealth;
         lifeCheck();
     }
 

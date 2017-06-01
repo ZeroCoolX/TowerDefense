@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
 
-    private bool doMovement = true;
-
     public float panSpeed = 30f;
     private float panBorderThickness = 10f;
 
@@ -18,14 +16,6 @@ public class CameraController : MonoBehaviour {
 
         if (GameManager.gameIsOver) {
             this.enabled = false;
-            return;
-        }
-
-        //Allowing the user to not ALWAYS move. cuz that could get annoying
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            doMovement = !doMovement;
-        }
-        if (!doMovement) {
             return;
         }
 
