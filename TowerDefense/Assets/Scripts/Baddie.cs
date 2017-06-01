@@ -16,6 +16,8 @@ public class Baddie : MonoBehaviour {
     [Header("Unity Stuff")]
     public Image healthBar;
 
+    private bool isDead = false;
+
     private void Start() {
         speed = startSpeed;
         health = startHealth;
@@ -32,7 +34,7 @@ public class Baddie : MonoBehaviour {
     }
 
     private void lifeCheck() {
-        if(health <= 0) {
+        if(health <= 0 && !isDead) {//concurrency bug fix
             killDashNine(false);
         }
     }
@@ -44,7 +46,7 @@ public class Baddie : MonoBehaviour {
         }else {
             PlayerStats.currency += baddieHubris;
         }
-
+        isDead = true;
         //tell the wavespawner this enemy died
         --WaveSpawner.baddiesAlive;
         //generate effect

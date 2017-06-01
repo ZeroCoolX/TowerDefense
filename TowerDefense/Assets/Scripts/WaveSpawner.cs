@@ -20,14 +20,21 @@ public class WaveSpawner : MonoBehaviour {
 
     public Text waveCountdownText;
 
+    public GameManager gameManager;
+
     private void Update() {
         //check wave beaten
         if (baddiesAlive > 0) {
             return;
         }
 
-            //spawn baddies
-            if (countdown <= 0) {
+        if (waveIndex == waves.Length) {
+            gameManager.winLevel();
+            this.enabled = false;
+        }
+
+        //spawn baddies
+        if (countdown <= 0) {
                 StartCoroutine(spawnWave());
                 countdown = timeBetweenWaves;
                 return;
@@ -42,19 +49,17 @@ public class WaveSpawner : MonoBehaviour {
     private IEnumerator spawnWave() {
         //increment wave index and store rounds
         ++PlayerStats.roundsSurvived;
+
+        baddiesAlive = waves[waveIndex].baddieCount;
+
         //spawn as many baddies as the wave needs
         for (int i = 0; i < waves[waveIndex].baddieCount; ++i) {
             //add an enemy to the stack
-            ++baddiesAlive;
             yield return new WaitForSeconds(1f / waves[waveIndex].spawnRate);//Baddie spacing
             spawnBaddie();
         }
         //set for next wave
         ++waveIndex;
-        if(waveIndex == waves.Length) {
-            Debug.Log("LEVEL WON");
-            this.enabled = false;
-        }
     }
 
     private void spawnBaddie() {
