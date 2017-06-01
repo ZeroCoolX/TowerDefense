@@ -45,6 +45,8 @@ public class Baddie : MonoBehaviour {
             PlayerStats.currency += baddieHubris;
         }
 
+        //tell the wavespawner this enemy died
+        --WaveSpawner.baddiesAlive;
         //generate effect
         GameObject effect =  Instantiate(deathEffect, transform.position, Quaternion.identity) as GameObject;
         Destroy(effect, 5f);
