@@ -7,16 +7,18 @@ using UnityEngine.SceneManagement;
 public class GameOver : MonoBehaviour {
 
     public Text roundsText;
+    public SceneFader sceneFader;
+    public string menuSceneName = "MainMenu";
 
     private void OnEnable() {
         roundsText.text = PlayerStats.roundsSurvived.ToString();
     }
 
     public void retry() {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        sceneFader.fadeTo(SceneManager.GetActiveScene().name);
     }
 
     public void goToMenu() {
-        Debug.Log("go to menu");
+        sceneFader.fadeTo(menuSceneName);
     }
 }
